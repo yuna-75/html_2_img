@@ -1,47 +1,28 @@
-const { chromium } = require('playwright');
-const express = require('express');
+import { chromium } from 'playwright';
 
-const app = express();
-app.use(express.json({ limit: '50mb' }));
+export default async function handler(req) {
+  if (req.method !== 'POST') {
+    return new Response('Method not allowed', { status: 405 });
+  }
 
-// 添加 CORS 头信息
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
-
-let browserInstance = null;
-
-async function initBrowser() {
-  if (browserInstance) return browserInstance;
-  
-  browserInstance = await chromium.launch({
-    headless: true
-  });
-  
-  return browserInstance;
-}
-
-app.post('/api/convert', async (req, res) => {
   let browser = null;
   let context = null;
   let page = null;
 
   try {
-    const { html, width = 800, height = 600 } = req.body;
+    const { html, width = 800, height = 600 } = await req.json();
 
     if (!html) {
-      return res.status(400).json({ error: '缺少 HTML 内容' });
+      return new Response('缺少 HTML 内容', { status: 400 });
     }
 
     if (typeof html !== 'string' || html.trim() === '') {
-      return res.status(400).json({ error: 'HTML 内容无效' });
+      return new Response('HTML 内容无效', { status: 400 });
     }
 
     browser = await chromium.launch({
-      headless: true
+      headless: true,
+      args: ['--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage']
     });
 
     context = await browser.newContext({
@@ -79,39 +60,31 @@ app.post('/api/convert', async (req, res) => {
 
     if (!screenshot || screenshot.length === 0) {
       console.error('生成的截图为空或损坏');
-      return res.status(500).json({ error: '生成的截图为空或损坏' });
+      return new Response('生成的截图为空或损坏', { status: 500 });
     }
 
     console.log('生成的截图长度:', screenshot.length);
 
     await context.close();
 
-    res.set('Content-Type', 'image/png');
-    res.set('Cache-Control', 'no-cache');
-    res.set('Content-Disposition', 'attachment; filename="screenshot.png"');
-    res.send(screenshot);
+    return new Response(screenshot, {
+      headers: {
+        'Content-Type': 'image/png',
+        'Cache-Control': 'no-cache',
+        'Content-Disposition': 'attachment; filename="screenshot.png"'
+      }
+    });
   } catch (error) {
-    console.error('详细错误信息:', {
+    console.error('��细错误信息:', {
       message: error.message,
       stack: error.stack,
       name: error.name
     });
     
-    res.status(500).json({ 
-      error: '服务器内部错误',
-      details: error.message
-    });
+    return new Response('服务器内部错误', { status: 500 });
   } finally {
     if (page) await page.close().catch(console.error);
     if (context) await context.close().catch(console.error);
     if (browser) await browser.close().catch(console.error);
   }
-});
-
-const PORT = process.env.PORT || 3002;
-app.listen(PORT, () => {
-  console.log(`服务器运行在 http://localhost:${PORT}`);
-}); 
-
-// 为了兼容 Vercel，导出 app
-module.exports = app;
+}
