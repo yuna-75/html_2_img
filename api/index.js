@@ -1,4 +1,4 @@
-import { chromium } from 'playwright';
+import { chromium } from 'playwright-core';
 
 export default async function handler(req) {
   if (req.method !== 'POST') {
@@ -75,7 +75,7 @@ export default async function handler(req) {
       }
     });
   } catch (error) {
-    console.error('��细错误信息:', {
+    console.error('详细错误信息:', {
       message: error.message,
       stack: error.stack,
       name: error.name
