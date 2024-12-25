@@ -24,7 +24,7 @@ async function initBrowser() {
   return browserInstance;
 }
 
-app.post('/', async (req, res) => {
+app.post('/api/convert', async (req, res) => {
   let browser = null;
   let context = null;
   let page = null;
@@ -112,3 +112,6 @@ const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
   console.log(`服务器运行在 http://localhost:${PORT}`);
 }); 
+
+// 为了兼容 Vercel，导出 app
+module.exports = app;
