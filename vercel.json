@@ -1,9 +1,15 @@
 {
   "version": 2,
+  "routes": [
+    {
+      "src": "/api/convert",
+      "dest": "/api"
+    }
+  ],
   "functions": {
     "api/*.js": {
       "memory": 1024,
-      "maxDuration": 10
+      "maxDuration": 15
     }
   }
-} 
+}

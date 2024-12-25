@@ -24,7 +24,7 @@ async function initBrowser() {
   return browserInstance;
 }
 
-app.post('/convert', async (req, res) => {
+app.post('/', async (req, res) => {
   let browser = null;
   let context = null;
   let page = null;
