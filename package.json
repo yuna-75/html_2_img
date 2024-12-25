@@ -1,0 +1,16 @@
+{
+  "name": "html_2_img",
+  "version": "1.0.0",
+  "description": "HTML to Image API",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node api/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "playwright": "^1.48.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
