@@ -4,7 +4,8 @@
   "description": "HTML to Image API",
   "main": "api/index.js",
   "scripts": {
-    "start": "node api/index.js"
+    "start": "node api/index.js",
+    "postinstall": "playwright install --with-deps"
   },
   "dependencies": {
     "express": "^4.21.2",
