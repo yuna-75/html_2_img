@@ -5,7 +5,7 @@
   "main": "api/index.js",
   "scripts": {
     "start": "node api/index.js",
-    "postinstall": "playwright install chromium-min"
+    "postinstall": "playwright install chromium-headless-shell"
   },
   "dependencies": {
     "express": "^4.21.2",
