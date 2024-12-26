@@ -4,12 +4,12 @@
   "description": "HTML to Image API",
   "main": "api/index.js",
   "scripts": {
-    "start": "node api/index.js",
-    "postinstall": "npx playwright-core install chromium-headless-shell"
+    "start": "node api/index.js"
   },
   "dependencies": {
     "express": "^4.21.2",
-    "playwright-core": "^1.49.1"
+    "@sparticuz/chromium": "^118.0.0",
+    "playwright-core": "^1.39.0"
   },
   "engines": {
     "node": ">=18.0.0"

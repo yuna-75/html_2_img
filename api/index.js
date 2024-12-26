@@ -1,4 +1,5 @@
 import { chromium } from 'playwright-core';
+import chromiumPath from '@sparticuz/chromium';
 
 export default async function handler(req) {
   if (req.method !== 'POST') {
@@ -22,6 +23,7 @@ export default async function handler(req) {
 
     browser = await chromium.launch({
       headless: true,
+      executablePath: await chromiumPath.executablePath,
       args: ['--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage']
     });
 
